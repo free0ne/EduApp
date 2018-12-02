@@ -11,11 +11,6 @@ local scene = composer.newScene()
 local buttonsFont = "calibri"
 local buttonsFontSize = 30
 
-
-local function gotoCat1()
-    composer.gotoScene( "cat1" )
-end
-
 -- ScrollView listener
 --[[local function scrollListener( event )
 
@@ -83,6 +78,9 @@ function scene:create( event )
         elseif nummer == 7 then
           print( "7" )
         end
+        --!!передача данных в другую сцену
+        composer.setVariable( "stageNummer", nummer )
+        composer.gotoScene( "stageChoose" )
     end
 
     if ( phase == "moved" ) then
