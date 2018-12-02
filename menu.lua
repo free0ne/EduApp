@@ -62,11 +62,27 @@ function scene:create( event )
       }
   )
 
-  local function handleButton1Event( event )
+  local function handleButtonEvent( event )
 
     local phase = event.phase
     if ( "ended" == phase ) then
         print( "Button was pressed and released" )
+        nummer = event.target.nummer
+        if nummer == 1 then
+          print( "1" )
+        elseif nummer == 2 then
+          print( "2" )
+        elseif nummer == 3 then
+          print( "3" )
+        elseif nummer == 4 then
+          print( "4" )
+        elseif nummer == 5 then
+          print( "5" )
+        elseif nummer == 6 then
+          print( "6" )
+        elseif nummer == 7 then
+          print( "7" )
+        end
     end
 
     if ( phase == "moved" ) then
@@ -80,15 +96,7 @@ function scene:create( event )
     return true
   end
 
-
 	-- Code here runs when the scene is first created but has not yet appeared on screen
-
-  local bg = display.newImage("pics/bg2.jpg")
-  bg.x = display.contentCenterX
-  bg.y = display.contentCenterY
-  scrollView:insert(bg)
-
-  display.setDefault( "background", 12/255, 110/255, 30/255 )
 
   -- Create the widget
 
@@ -105,11 +113,13 @@ function scene:create( event )
       width = display.contentWidth,
       height = display.contentHeight/6,
       fillColor = { default={173/255,123/255,243/255,1}, over={173/255,123/255,243/255,1} },
-      onEvent = handleButton1Event
+      onEvent = handleButtonEvent
     }
   )
+  --button1:addEventListener ( handleButtonEvent, "1" )
   button1.x = display.contentCenterX
   button1.y = 80
+  button1.nummer = 1
   scrollView:insert(button1)
   -- конец отдельной кнопки
   -- начало отдельной кнопки
@@ -125,11 +135,12 @@ function scene:create( event )
       width = display.contentWidth,
       height = display.contentHeight/6,
       fillColor = { default={187/255,136/255,219/255,1}, over={187/255,136/255,219/255,1} },
-      onEvent = handleButton1Event
+      onEvent = handleButtonEvent
     }
   )
   button2.x = display.contentCenterX
   button2.y = 240
+  button2.nummer = 2
   scrollView:insert(button2)
   -- конец отдельной кнопки
   -- начало отдельной кнопки
@@ -145,11 +156,12 @@ function scene:create( event )
       width = display.contentWidth,
       height = display.contentHeight/6,
       fillColor = { default={202/255,150/255,194/255,1}, over={202/255,150/255,194/255,1} },
-      onEvent = handleButton1Event
+      onEvent = handleButtonEvent
     }
   )
   button3.x = display.contentCenterX
   button3.y = 400
+  button3.nummer = 3
   scrollView:insert(button3)
   -- конец отдельной кнопки
   -- начало отдельной кнопки
@@ -165,11 +177,12 @@ function scene:create( event )
       width = display.contentWidth,
       height = display.contentHeight/6,
       fillColor = { default={212/255,159/255,175/255,1}, over={212/255,159/255,175/255,1} },
-      onEvent = handleButton1Event
+      onEvent = handleButtonEvent
     }
   )
   button4.x = display.contentCenterX
   button4.y = 560
+  button4.nummer = 4
   scrollView:insert(button4)
   -- конец отдельной кнопки
   -- начало отдельной кнопки
@@ -185,11 +198,12 @@ function scene:create( event )
       width = display.contentWidth,
       height = display.contentHeight/6,
       fillColor = { default={224/255,170/255,155/255,1}, over={224/255,170/255,155/255,1} },
-      onEvent = handleButton1Event
+      onEvent = handleButtonEvent
     }
   )
   button5.x = display.contentCenterX
   button5.y = 720
+  button5.nummer = 5
   scrollView:insert(button5)
   -- конец отдельной кнопки
   -- начало отдельной кнопки
@@ -205,11 +219,12 @@ function scene:create( event )
       width = display.contentWidth,
       height = display.contentHeight/6,
       fillColor = { default={237/255,182/255,133/255,1}, over={237/255,182/255,133/255,1} },
-      onEvent = handleButton1Event
+      onEvent = handleButtonEvent
     }
   )
   button6.x = display.contentCenterX
   button6.y = 880
+  button6.nummer = 6
   scrollView:insert(button6)
   -- конец отдельной кнопки
   -- начало отдельной кнопки
@@ -225,11 +240,12 @@ function scene:create( event )
       width = display.contentWidth,
       height = display.contentHeight/6,
       fillColor = { default={249/255,198/255,133/255,1}, over={249/255,198/255,133/255,1} },
-      onEvent = handleButton1Event
+      onEvent = handleButtonEvent
     }
   )
   button7.x = display.contentCenterX
   button7.y = 1040
+  button7.nummer = 7
   scrollView:insert(button7)
   -- конец отдельной кнопки
 
