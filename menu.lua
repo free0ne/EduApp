@@ -61,23 +61,9 @@ function scene:create( event )
 
     local phase = event.phase
     if ( "ended" == phase ) then
-        print( "Button was pressed and released" )
+
         nummer = event.target.nummer
-        if nummer == 1 then
-          print( "1" )
-        elseif nummer == 2 then
-          print( "2" )
-        elseif nummer == 3 then
-          print( "3" )
-        elseif nummer == 4 then
-          print( "4" )
-        elseif nummer == 5 then
-          print( "5" )
-        elseif nummer == 6 then
-          print( "6" )
-        elseif nummer == 7 then
-          print( "7" )
-        end
+        print( "Button #"..nummer.." was pressed and released" )
         --!!передача данных в другую сцену
         composer.setVariable( "stageNummer", nummer )
         composer.gotoScene( "stageChoose" )
@@ -98,8 +84,73 @@ function scene:create( event )
 
   -- Create the widget
 
+  -- create buttons array
+  local buttons = {}
+  for i = 0, 6 do
+    buttons[i] = widget.newButton(
+      {
+        labelXOffset = 20,
+        label = "categoryName",
+        labelColor = { default={ 1, 1, 1 }, over={ 1, 1, 1 } },
+        labelAlign = "left",
+        font = buttonsFont,
+        fontSize = buttonsFontSize,
+        shape = "rect",
+        width = display.contentWidth,
+        height = display.contentHeight/6,
+        --fillColor = { default={173/255,123/255,243/255,1}, over={173/255,123/255,243/255,1} },
+        onEvent = handleButtonEvent
+      }
+    )
+      if i == 0 then
+        buttons[i]:setLabel("системы\nсчисления")
+        buttons[i]:setFillColor( 173/255,123/255,243/255 )
+        buttons[i].x = display.contentCenterX
+        buttons[i].y = 80
+        buttons[i].nummer = 1
+      elseif i == 1 then
+        buttons[i]:setLabel("Тема 2")
+        buttons[i]:setFillColor( 187/255,136/255,219/255 )
+        buttons[i].x = display.contentCenterX
+        buttons[i].y = 240
+        buttons[i].nummer = 2
+      elseif i == 2 then
+        buttons[i]:setLabel("Тема\nномер 3")
+        buttons[i]:setFillColor( 202/255,150/255,194/255 )
+        buttons[i].x = display.contentCenterX
+        buttons[i].y = 400
+        buttons[i].nummer = 3
+      elseif i == 3 then
+        buttons[i]:setLabel("Тема\nномер 4")
+        buttons[i]:setFillColor( 212/255,159/255,175/255 )
+        buttons[i].x = display.contentCenterX
+        buttons[i].y = 560
+        buttons[i].nummer = 4
+      elseif i == 4 then
+        buttons[i]:setLabel("Тема 5")
+        buttons[i]:setFillColor( 224/255,170/255,155/255 )
+        buttons[i].x = display.contentCenterX
+        buttons[i].y = 720
+        buttons[i].nummer = 5
+      elseif i == 5 then
+        buttons[i]:setLabel("Тема\nномер 6")
+        buttons[i]:setFillColor( 237/255,182/255,133/255 )
+        buttons[i].x = display.contentCenterX
+        buttons[i].y = 880
+        buttons[i].nummer = 6
+      elseif i == 6 then
+        buttons[i]:setLabel("Тема 7")
+        buttons[i]:setFillColor( 249/255,198/255,133/255 )
+        buttons[i].x = display.contentCenterX
+        buttons[i].y = 1040
+        buttons[i].nummer = 7
+      end
+      scrollView:insert(buttons[i])
+  end
+
+
   -- начало отдельной кнопки
-  local button1 = widget.newButton(
+  --[[local button1 = widget.newButton(
     {
       labelXOffset = 20,
       label = "системы\nсчисления",
@@ -119,133 +170,9 @@ function scene:create( event )
   button1.y = 80
   button1.nummer = 1
   scrollView:insert(button1)
+
   -- конец отдельной кнопки
-  -- начало отдельной кнопки
-  local button2 = widget.newButton(
-    {
-      labelXOffset = 20,
-      label = "Тема 2",
-      labelColor = { default={ 1, 1, 1 }, over={ 1, 1, 1 } },
-      labelAlign = "left",
-      font = buttonsFont,
-      fontSize = buttonsFontSize,
-      shape = "rect",
-      width = display.contentWidth,
-      height = display.contentHeight/6,
-      fillColor = { default={187/255,136/255,219/255,1}, over={187/255,136/255,219/255,1} },
-      onEvent = handleButtonEvent
-    }
-  )
-  button2.x = display.contentCenterX
-  button2.y = 240
-  button2.nummer = 2
-  scrollView:insert(button2)
-  -- конец отдельной кнопки
-  -- начало отдельной кнопки
-  local button3 = widget.newButton(
-    {
-      labelXOffset = 20,
-      label = "Тема\nномер 3",
-      labelColor = { default={ 1, 1, 1 }, over={ 1, 1, 1 } },
-      labelAlign = "left",
-      font = buttonsFont,
-      fontSize = buttonsFontSize,
-      shape = "rect",
-      width = display.contentWidth,
-      height = display.contentHeight/6,
-      fillColor = { default={202/255,150/255,194/255,1}, over={202/255,150/255,194/255,1} },
-      onEvent = handleButtonEvent
-    }
-  )
-  button3.x = display.contentCenterX
-  button3.y = 400
-  button3.nummer = 3
-  scrollView:insert(button3)
-  -- конец отдельной кнопки
-  -- начало отдельной кнопки
-  local button4 = widget.newButton(
-    {
-      labelXOffset = 20,
-      label = "Тема\nномер 4",
-      labelColor = { default={ 1, 1, 1 }, over={ 1, 1, 1 } },
-      labelAlign = "left",
-      font = buttonsFont,
-      fontSize = buttonsFontSize,
-      shape = "rect",
-      width = display.contentWidth,
-      height = display.contentHeight/6,
-      fillColor = { default={212/255,159/255,175/255,1}, over={212/255,159/255,175/255,1} },
-      onEvent = handleButtonEvent
-    }
-  )
-  button4.x = display.contentCenterX
-  button4.y = 560
-  button4.nummer = 4
-  scrollView:insert(button4)
-  -- конец отдельной кнопки
-  -- начало отдельной кнопки
-  local button5 = widget.newButton(
-    {
-      labelXOffset = 20,
-      label = "Тема\nномер 5",
-      labelColor = { default={ 1, 1, 1 }, over={ 1, 1, 1 } },
-      labelAlign = "left",
-      font = buttonsFont,
-      fontSize = buttonsFontSize,
-      shape = "rect",
-      width = display.contentWidth,
-      height = display.contentHeight/6,
-      fillColor = { default={224/255,170/255,155/255,1}, over={224/255,170/255,155/255,1} },
-      onEvent = handleButtonEvent
-    }
-  )
-  button5.x = display.contentCenterX
-  button5.y = 720
-  button5.nummer = 5
-  scrollView:insert(button5)
-  -- конец отдельной кнопки
-  -- начало отдельной кнопки
-  local button6 = widget.newButton(
-    {
-      labelXOffset = 20,
-      label = "Тема\nномер 6",
-      labelColor = { default={ 1, 1, 1 }, over={ 1, 1, 1 } },
-      labelAlign = "left",
-      font = buttonsFont,
-      fontSize = buttonsFontSize,
-      shape = "rect",
-      width = display.contentWidth,
-      height = display.contentHeight/6,
-      fillColor = { default={237/255,182/255,133/255,1}, over={237/255,182/255,133/255,1} },
-      onEvent = handleButtonEvent
-    }
-  )
-  button6.x = display.contentCenterX
-  button6.y = 880
-  button6.nummer = 6
-  scrollView:insert(button6)
-  -- конец отдельной кнопки
-  -- начало отдельной кнопки
-  local button7 = widget.newButton(
-    {
-      labelXOffset = 20,
-      label = "Тема\nномер 7",
-      labelColor = { default={ 1, 1, 1 }, over={ 1, 1, 1 } },
-      labelAlign = "left",
-      font = buttonsFont,
-      fontSize = buttonsFontSize,
-      shape = "rect",
-      width = display.contentWidth,
-      height = display.contentHeight/6,
-      fillColor = { default={249/255,198/255,133/255,1}, over={249/255,198/255,133/255,1} },
-      onEvent = handleButtonEvent
-    }
-  )
-  button7.x = display.contentCenterX
-  button7.y = 1040
-  button7.nummer = 7
-  scrollView:insert(button7)
-  -- конец отдельной кнопки
+  --]]
 
   sceneGroup:insert( scrollView )
 end
