@@ -21,7 +21,7 @@ end
 
 local function transition_2_button(obj, text)
    obj:setLabel(text)
-   obj:setFillColor(0.2, 1, 1)
+   obj:setFillColor(0.5, 0.1, 0.65, 0.85)
    obj:setEnabled(true)
    transition.to(obj,{time=200,alpha=1})
 
@@ -116,7 +116,7 @@ end
 function scene:create( event )
 
 	sceneGroup = self.view
-  display.setDefault( "background", 0.5, 0.6, 0.3 )
+  display.setDefault( "background", 233/255, 220/255,255/255 )
 	-- Code here runs when the scene is first created but has not yet appeared on screen
 
   local category = composer.getVariable( "category" )
@@ -125,10 +125,23 @@ function scene:create( event )
   currentTask = 0
   score = 0
 
-  local derText = "Category: "..category.."; level: "..level
-  local catTitle = display.newText( sceneGroup, derText, display.contentWidth/2, 100, native.systemFont, 32 )
-  catTitle:setFillColor( 0, 1, 0 )
+
+  --local derText = "Category: "..category.."; level: "..level
+  local catTitle = widget.newButton(
+    {
+      shape = "rect",
+      width = 100,
+      height = 100,
+      label = "<",
+      fontSize = 60,
+      fillColor = { default={ 143/255,93/255,213/255,0.2 }, over={ 143/255,93/255,213/255, 0.4 } },
+      labelColor = { default={ 143/255,93/255,213/255 }, over={ 143/255,93/255,213/255 } },
+    }
+  )
+  catTitle.x = 50
+  catTitle.y = 50
   catTitle:addEventListener( "tap", backToCats )
+  sceneGroup:insert(catTitle)
 
   ---------\\\\\\\\\\\\\\     SQL    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
     local path = system.pathForFile( "tasks.db", system.DocumentsDirectory )
@@ -162,8 +175,8 @@ function scene:create( event )
     Runtime:addEventListener( "system", onSystemEvent )
   ------\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-  task = display.newText( sceneGroup, "taskText", display.contentWidth/2, 300, nil, 36 )
-  task:setFillColor( 0.5, 0.2, 1 )
+  task = display.newText( sceneGroup, "taskText", display.contentWidth/2, 270, nil, 36 )
+  task:setFillColor( 0, 0, 0 )
 
   answerButtons = {}
   local xx = 0
@@ -173,15 +186,15 @@ function scene:create( event )
       {
         shape = "roundedRect",
         cornerRadius = 8,
-        fillColor = { default={ 0.2, 1, 1 }, over={ 0.2, 1, 1 } },
+        fillColor = { default={ 0.5, 0.1, 0.65, 0.85 }, over={ 0.5, 0.1, 0.65, 0.65 } },
         --fillColor = { default={ 1, 0.2, 0.5, 0.7 }, over={ 1, 0.2, 0.5, 1 } },
         --strokeColor = { default={ 1, 1, 1 }, over={ 0.4, 0.1, 0.2 } },
         --strokeWidth = 3,
         width = 200,
         height = 160,
         label = "answer #"..i+1,
-        fontSize = 22,
-        labelColor = { default={ 0.5, 0.1, 0.65 }, over={ 0, 0, 0 } },
+        fontSize = 26,
+        labelColor = { default={ 1, 1, 1 }, over={ 1, 1, 1 } },
         onEvent = handleButtonEvent,
       }
     )
@@ -197,15 +210,16 @@ function scene:create( event )
   currentTask = currentTask + 1
   changeTask(task, answerButtons,myTaskArray, currentTask)
 
-  --[[local label = display.newText(sceneGroup,"Label_1",50,100,nil,20)
-  label:setTextColor(0,0,1)
-
-  local function transition_2()
-     label.text = "Label_2"
-     transition.to(label,{time=1000,alpha=1})
-  end
-  transition.to(label,{time=1000,alpha=0,onComplete=transition_2})]]--
-
+  --[[progressView = widget.newProgressView(
+      {
+          left = 0,
+          top = 956,
+          width = display.contentWidth,
+          isAnimated = true
+      }
+  )
+  progressView:setProgress( 0.0 )
+  sceneGroup:insert(progressView)]]--
 
 
 end

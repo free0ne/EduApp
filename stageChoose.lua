@@ -10,6 +10,7 @@ local scene = composer.newScene()
 -- the scene is removed entirely (not recycled) via "composer.removeScene()"
 -- -----------------------------------------------------------------------------------
   local category = 0
+  local color
   local categoryName = "Название категории"
 
   local function backToMenu()
@@ -29,21 +30,27 @@ function scene:create( event )
 	-- Code here runs when the scene is first created but has not yet appeared on screen
   local category = composer.getVariable( "stageNummer" )
   if category == 1 then
-    categoryName = "Системы счисления"
+    categoryName = "cистемы счисления"
+    color = { 143/255,93/255,213/255 }
   elseif category == 2 then
     categoryName = "Тема 2"
+    color = { 157/255,106/255,189/255 }
   elseif category == 3 then
     categoryName = "Тема 3"
+    color = { 172/255,120/255,164/255 }
   elseif category == 4 then
     categoryName = "Тема 4"
+    color = { 182/255,129/255,145/255 }
   elseif category == 5 then
     categoryName = "Тема 5"
+    color = { 194/255,140/255,125/255 }
   elseif category == 6 then
     categoryName = "Тема 6"
+    color = { 207/255,152/255,103/255 }
   elseif category == 7 then
     categoryName = "Тема 7"
+    color = { 219/255,168/255,103/255 }
   end
-
 ------------------- обработка кнопок
 
   local function handleButtonEvent( event )
@@ -71,9 +78,55 @@ function scene:create( event )
   end
  -----------------------------------------------
   -- не забывай добавлять в группы! (sceneGroup)
-  local catTitle = display.newText( sceneGroup, categoryName, display.contentWidth/2, 100, native.systemFont, 32 )
-  catTitle:setFillColor( 0, 1, 0 )
+  local upperRectangle = display.newRect( sceneGroup,display.contentWidth/2, 70, display.contentWidth, 140 )
+  local paint = {
+    type = "gradient",
+    color1 = color,
+    color2 = { 1, 1, 1 },
+    direction = "down"
+  }
+  upperRectangle:setFillColor(paint)
+
+  local catTitle = widget.newButton(
+    {
+      shape = "rect",
+      labelAlign = "left",
+      labelXOffset = 15,
+      labelYOffset = -12,
+      width = display.contentWidth/4*3,
+      height = 140,
+      label = categoryName,
+      fontSize = 40,
+      labelColor = { default={ 1, 1, 1 }, over={ 1, 1, 1 } },
+    }
+  )
+  catTitle.x = 200
+  catTitle.y = 70
+
+  catTitle:setFillColor(0,0,0,0.1)
+  sceneGroup:insert(catTitle)
   catTitle:addEventListener( "tap", backToMenu )
+
+  local help = widget.newButton(
+    {
+      shape = "circle",
+      radius = 40,
+      label = "?",
+      fontSize = 45,
+      fillColor = { default={ 0, 0, 0, 0.1 }, over={ 0, 0, 0, 0.1 } },
+      labelColor = { default={ 1, 1, 1 }, over={ 1, 1, 1 } },
+      onPress = function(event)
+        composer.showOverlay( "help" , {
+          isModal = true,
+          effect = "fade",
+          time = 400,
+        } )
+      end  
+    }
+  )
+  help.x = 500
+  help.y = 70
+  sceneGroup:insert(help)
 
 ---------\\\\\\\\\\\\\\     SQL    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
   -- local sqlite3 = require( "sqlite3" )
