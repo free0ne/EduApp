@@ -102,48 +102,32 @@ function scene:create( event )
         onEvent = handleButtonEvent
       }
     )
+
+    buttons[i].x = display.contentCenterX
+    buttons[i].y = 80 + i*160
+    buttons[i].nummer = i+1
+
       if i == 0 then
         buttons[i]:setLabel("системы\nсчисления")
         buttons[i]:setFillColor( 173/255,123/255,243/255 )
-        buttons[i].x = display.contentCenterX
-        buttons[i].y = 80
-        buttons[i].nummer = 1
       elseif i == 1 then
         buttons[i]:setLabel("Тема 2")
         buttons[i]:setFillColor( 187/255,136/255,219/255 )
-        buttons[i].x = display.contentCenterX
-        buttons[i].y = 240
-        buttons[i].nummer = 2
       elseif i == 2 then
         buttons[i]:setLabel("Тема\nномер 3")
         buttons[i]:setFillColor( 202/255,150/255,194/255 )
-        buttons[i].x = display.contentCenterX
-        buttons[i].y = 400
-        buttons[i].nummer = 3
       elseif i == 3 then
         buttons[i]:setLabel("Тема\nномер 4")
         buttons[i]:setFillColor( 212/255,159/255,175/255 )
-        buttons[i].x = display.contentCenterX
-        buttons[i].y = 560
-        buttons[i].nummer = 4
       elseif i == 4 then
         buttons[i]:setLabel("Тема 5")
         buttons[i]:setFillColor( 224/255,170/255,155/255 )
-        buttons[i].x = display.contentCenterX
-        buttons[i].y = 720
-        buttons[i].nummer = 5
       elseif i == 5 then
         buttons[i]:setLabel("Тема\nномер 6")
         buttons[i]:setFillColor( 237/255,182/255,133/255 )
-        buttons[i].x = display.contentCenterX
-        buttons[i].y = 880
-        buttons[i].nummer = 6
       elseif i == 6 then
         buttons[i]:setLabel("Тема 7")
         buttons[i]:setFillColor( 249/255,198/255,133/255 )
-        buttons[i].x = display.contentCenterX
-        buttons[i].y = 1040
-        buttons[i].nummer = 7
       end
       scrollView:insert(buttons[i])
   end
