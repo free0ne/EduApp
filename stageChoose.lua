@@ -1,7 +1,9 @@
 
+
 local composer = require( "composer" )
 local widget = require( "widget" )
 local sqlite3 = require( "sqlite3" )
+
 
 local scene = composer.newScene()
 
@@ -9,14 +11,39 @@ local scene = composer.newScene()
 -- Code outside of the scene event functions below will only be executed ONCE unless
 -- the scene is removed entirely (not recycled) via "composer.removeScene()"
 -- -----------------------------------------------------------------------------------
+
   local category = 0
   local color
   local categoryName = "Название категории"
+  local response = ""
+  local results = {}
+  local buttons = {}
+  local pos = 0
 
   local function backToMenu()
     composer.gotoScene( "menu" )
   end
 
+  local function networkListener( event )
+    for i = 0, 2 do
+      results[i] = "0/10"
+    end
+    if ( event.isError ) then
+        print( "Network error: ", event.response )
+    else
+        --print ( "RESPONSE: " .. event.response )
+        response = event.response
+        print (response)
+        for i in string.gmatch(response, "%S+") do
+           results[pos] = i
+           pos = pos + 1
+        end
+        pos = 0
+        for i = 0, 2 do
+          buttons[i]:setLabel(" "..tostring(i+1).."\n"..results[i].."/9")
+        end
+    end
+  end
 
 -- -----------------------------------------------------------------------------------
 -- Scene event functions
@@ -52,6 +79,9 @@ function scene:create( event )
     color = { 219/255,168/255,103/255 }
   end
 ------------------- обработка кнопок
+--rectLvl:setFillColor(243/255, 248/255, 1)
+--rectLvl:setStrokeColor (1, 0, 0)
+--rectLvl.strokeWidth = 2
 
   local function handleButtonEvent( event )
 
@@ -65,6 +95,16 @@ function scene:create( event )
         print("Category: "..category.."; level: "..nummer)
         composer.gotoScene( "stage" )
     end
+    --сраное всплывающее окно, где по идее должен быть общий текст задания
+    local options =
+    {
+    isModal = true,
+    effect = "fade",
+    time = 1000,
+    }
+
+    -- By some method such as a "pause" button, show the overlay
+    composer.showOverlay( "globalTusk", options )
 
     --[[if ( phase == "moved" ) then
         local dy = math.abs( ( event.y - event.yStart ) )
@@ -79,24 +119,26 @@ function scene:create( event )
  -----------------------------------------------
   -- не забывай добавлять в группы! (sceneGroup)
   local upperRectangle = display.newRect( sceneGroup,display.contentWidth/2, 70, display.contentWidth, 140 )
-  local paint = {
+  upperRectangle:setFillColor(173/255, 123/255, 243/255)
+  --[[local paint = {
     type = "gradient",
     color1 = color,
     color2 = { 1, 1, 1 },
     direction = "down"
-  }
-  upperRectangle:setFillColor(paint)
+  }]]--
+  --upperRectangle:setFillColor(paint)
 
   local catTitle = widget.newButton(
     {
       shape = "rect",
       labelAlign = "left",
-      labelXOffset = 15,
-      labelYOffset = -12,
+      labelXOffset = 3,
+      labelYOffset = -5,
       width = display.contentWidth/4*3,
       height = 140,
       label = categoryName,
-      fontSize = 40,
+      font = "displayOTF.ttf",
+      fontSize = 42,
       labelColor = { default={ 1, 1, 1 }, over={ 1, 1, 1 } },
     }
   )
@@ -112,6 +154,7 @@ function scene:create( event )
       shape = "circle",
       radius = 40,
       label = "?",
+      font = "displayOTF.ttf",
       fontSize = 45,
       fillColor = { default={ 0, 0, 0, 0.1 }, over={ 0, 0, 0, 0.1 } },
       labelColor = { default={ 1, 1, 1 }, over={ 1, 1, 1 } },
@@ -121,7 +164,7 @@ function scene:create( event )
           effect = "fade",
           time = 400,
         } )
-      end  
+      end
     }
   )
   help.x = 500
@@ -169,34 +212,59 @@ function scene:create( event )
   Runtime:addEventListener( "system", onSystemEvent )
 ------\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-  local buttons = {}
   local xx = 0
   local yy = 0
+  local xOffset = 150
+  local yOffset = 290
+  local cellCount = 1
   for i = 0, max-1 do
     buttons[i] = widget.newButton(
       {
-        shape = "roundedRect",
-        cornerRadius = 8,
-        fillColor = { default={ 1, 1, 1 }, over={ 1, 1, 1 } },
-        --fillColor = { default={ 1, 0.2, 0.5, 0.7 }, over={ 1, 0.2, 0.5, 1 } },
-        --strokeColor = { default={ 1, 1, 1 }, over={ 0.4, 0.1, 0.2 } },
-        --strokeWidth = 3,
-        width = 90,
-        height = 90,
-        label = i+1,
+        shape = "Rect",
+        fillColor = { default={ 0.95, 0.96, 1 }, over={ 0.68, 0.45, 0.95 } },
+        width = 235,
+        height = 235,
+        label = tostring( i+1 ),
+        font = "displayOTF.ttf",
         fontSize = 60,
-        labelColor = { default={ 0.5, 0.1, 0.65 }, over={ 0, 0, 0 } },
-        onEvent = handleButtonEvent,
+        labelColor = { default={ 0.5, 0.1, 0.65 }, over={ 0.3, 0, 0.75 } },
+
+        onEvent = handleButtonEvent
+
       }
     )
-    xx = 85 + ((i) % 3)*180
-    yy = (i - (i%3))/4
-    buttons[i].x = xx
-    buttons[i].y = 210 + yy*180
-    buttons[i].nummer = i+1
+    --xx = 150 + ((i) % 3)*250
+    --yy = (i - (i%3))/4
+   buttons[i].x = xOffset
+   buttons[i].y = yOffset
+   buttons[i].nummer = i+1
 
-    sceneGroup:insert(buttons[i])
+   sceneGroup:insert(buttons[i])
+
+    xOffset = xOffset + 250
+    cellCount = cellCount + 1
+      if (cellCount > 2 ) then
+        cellCount = 1
+        xOffset = 150
+        yOffset = yOffset + 250
+      end
   end
+
+
+  local headers = {}
+
+  headers["Content-Type"] = "application/x-www-form-urlencoded"
+  headers["Accept-Language"] = "en-US"
+
+  --local body = "id=1&size=small"
+  local body = ""
+
+  local params = {}
+  params.headers = headers
+  params.body = body
+
+  network.request( "http://eduapp.pp/index.php", "POST", networkListener, params )
+
 
 end
 
@@ -209,7 +277,6 @@ function scene:show( event )
 
 	if ( phase == "will" ) then
 		-- Code here runs when the scene is still off screen (but is about to come on screen)
-
 	elseif ( phase == "did" ) then
 		-- Code here runs when the scene is entirely on screen
 
