@@ -103,7 +103,7 @@ local function changeTask(taskObj, buttonsArr, taskArr, taskNum)
         --strokeWidth = 3,
         width = 300,
         height = 260,
-        label = "К уровням",
+        label = "К уровнямм",
         fontSize = 32,
         labelColor = { default={ 0.5, 0.1, 0.65 }, over={ 0, 0, 0 } },
         onEvent = goBack,
