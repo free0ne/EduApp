@@ -41,7 +41,50 @@ end]]--
 -- create()
 function scene:create( event )
   local sceneGroup = self.view
+----------------------------------------------------------.......................
+--тут из старой базы в тейблы дёргаю
 
+  --[[local sqlite3 = require( "sqlite3" )
+  local path = system.pathForFile( "tasks.db", system.DocumentsDirectory )
+  local db = sqlite3.open( path )
+  local filePath = system.pathForFile( "category2.txt", system.DocumentsDirectory )
+  local file = io.open( filePath, "w" )
+
+  local function onSystemEvent( event )
+      if ( event.type == "applicationExit" ) then
+          db:close()
+      end
+  end
+
+  local totstr = "{ "
+  local sql = "SELECT * FROM category2"
+  --myTaskArray = {}
+  --local taskNummer = 0
+  for row in db:nrows(sql) do
+    -- totstr = totstr.."{ id = \""..row.id.."\", "
+    totstr = totstr.."{ level = \""..row.level.."\", "
+    totstr = totstr.."tasknummer = \""..row.tasknummer.."\", "
+    totstr = totstr.."taskText = \""..row.tasktext.."\", "
+    totstr = totstr.."answer1 = \""..row.answer1.."\", "
+    totstr = totstr.."answer2 = \""..row.answer2.."\", "
+    totstr = totstr.."answer3 = \""..row.answer3.."\", "
+    totstr = totstr.."answer4 = \""..row.answer4.."\", "
+    totstr = totstr.."correct = \""..row.correct.."\" }, "
+    --myTaskArray[taskNummer]["correct"] = row.correct
+    --print(myTaskArray[taskNummer]["taskText"])
+
+  end
+  totstr = totstr.." }"
+  print(totstr)
+  if file then
+        file:write( totstr )
+        io.close( file )
+    end
+
+  -- Setup the event listener to catch "applicationExit"
+  Runtime:addEventListener( "system", onSystemEvent )]]--
+
+----------------------------------------------------------.......................
     -- Create the widget
   local scrollView = widget.newScrollView(
       {
