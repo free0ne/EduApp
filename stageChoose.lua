@@ -2,8 +2,6 @@
 
 local composer = require( "composer" )
 local widget = require( "widget" )
-local sqlite3 = require( "sqlite3" )
-
 
 local scene = composer.newScene()
 
@@ -172,8 +170,37 @@ function scene:create( event )
   sceneGroup:insert(help)
 
 ---------\\\\\\\\\\\\\\     SQL    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-  -- local sqlite3 = require( "sqlite3" )
-  -- Open "data.db". If the file doesn't exist, it will be created
+
+
+
+  local max = 1
+  local tasktable
+
+  if category == 1 then
+      tasktable = require("category1")
+
+      for i=1, #tasktable do
+          if tonumber( tasktable[i]["level"] ) > max then
+              max = tonumber( tasktable[i]["level"] )
+          end
+      end
+  elseif category == 2 then
+      tasktable = require("category2")
+
+      for i=1, #tasktable do
+          if tonumber( tasktable[i]["level"] ) > max then
+              max = tonumber( tasktable[i]["level"] )
+          end
+      end
+  end
+
+
+  print("Maxlevel by table is: "..max)
+
+
+  --[[
+
+  local sqlite3 = require( "sqlite3" )
   local path = system.pathForFile( "tasks.db", system.DocumentsDirectory )
   local db = sqlite3.open( path )
 
@@ -183,33 +210,14 @@ function scene:create( event )
           db:close()
       end
   end
-  -- Print the SQLite version
-  -- print( "SQLite version " .. sqlite3.version() )
-  -- Print the table contents
-  --[[for row in db:nrows("SELECT MAX(level) FROM category1") do
-    local text = row.level .. " " .. row.tasktext
-    local t = display.newText( text, 20, 30*row.id, nil, 16 )
-    t:setFillColor( 1, 0, 1 )
-    sceneGroup:insert(t)
-  end]]--
-
-  --[[local countsql = "select count(*) from category"..category
-  for x in db:urows(countsql) do
-    print(x)
-  end]]--
 
   local sql = "SELECT MAX(level) FROM category"..category
-  local max = 1
+
   for val in db:urows(sql) do
     max = val
   end
     print("Maxlevel is: "..max)
-  -- local t = display.newText("Max: "..max, 50, 50, nil, 28)
-  -- t:setTextColor(0,0,0)
-  -- sceneGroup:insert(t)
-
-  -- Setup the event listener to catch "applicationExit"
-  Runtime:addEventListener( "system", onSystemEvent )
+  Runtime:addEventListener( "system", onSystemEvent )]]--
 ------\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
   local xx = 0

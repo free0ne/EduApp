@@ -1,7 +1,6 @@
 
 local composer = require( "composer" )
 local widget = require( "widget" )
-local sqlite3 = require( "sqlite3" )
 
 local scene = composer.newScene()
 
@@ -177,6 +176,30 @@ function scene:create( event )
   sceneGroup:insert(catTitle)
 
   ---------\\\\\\\\\\\\\\     SQL    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+    local tasktable
+    myTaskArray = {}
+    local taskNummer = 0
+
+    if category == 1 then
+      tasktable = require("category1")
+    elseif category == 2 then
+      tasktable = require("category2")
+    end
+
+    for i=1, #tasktable do
+        if tonumber( tasktable[i]["level"] ) == level then
+            taskNummer = taskNummer+1
+            myTaskArray[taskNummer] = {}
+            myTaskArray[taskNummer]["taskText"] = tasktable[i]["taskText"]
+            myTaskArray[taskNummer]["answer1"] = tasktable[i]["answer1"]
+            myTaskArray[taskNummer]["answer2"] = tasktable[i]["answer2"]
+            myTaskArray[taskNummer]["answer3"] = tasktable[i]["answer3"]
+            myTaskArray[taskNummer]["answer4"] = tasktable[i]["answer4"]
+            myTaskArray[taskNummer]["correct"] = tonumber( tasktable[i]["correct"] )
+        end
+    end
+
+    --[[local sqlite3 = require( "sqlite3" )
     local path = system.pathForFile( "tasks.db", system.DocumentsDirectory )
     local db = sqlite3.open( path )
 
@@ -187,10 +210,8 @@ function scene:create( event )
         end
     end
 
-
     local sql = "SELECT * FROM category"..category.." WHERE level = "..level
-    myTaskArray = {}
-    local taskNummer = 0
+
     for row in db:nrows(sql) do
       taskNummer = taskNummer+1
       myTaskArray[taskNummer] = {}
@@ -201,11 +222,10 @@ function scene:create( event )
       myTaskArray[taskNummer]["answer4"] = row.answer4
       myTaskArray[taskNummer]["correct"] = row.correct
       print(myTaskArray[taskNummer]["taskText"])
-
     end
 
     -- Setup the event listener to catch "applicationExit"
-    Runtime:addEventListener( "system", onSystemEvent )
+    Runtime:addEventListener( "system", onSystemEvent )]]--
   ------\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
   task = display.newText( sceneGroup, "taskText", display.contentWidth/2, 270, "displayOTF.ttf", 36 )
