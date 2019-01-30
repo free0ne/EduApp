@@ -177,16 +177,16 @@ function scene:create( event )
         buttons[i]:setLabel("Системы\nсчисления")
         buttons[i]:setFillColor( 173/255,123/255,243/255 )
       elseif i == 1 then
-        buttons[i]:setLabel("Таблицы\nистинности")
+        buttons[i]:setLabel("Маски для\nвыбора файлов")
         buttons[i]:setFillColor( 187/255,136/255,219/255 )
       elseif i == 2 then
-        buttons[i]:setLabel("Анализ моделей")
+        buttons[i]:setLabel("Условие Фано")
         buttons[i]:setFillColor( 202/255,150/255,194/255 )
       elseif i == 3 then
-        buttons[i]:setLabel("Поиск информации\nв базе данных")
+        buttons[i]:setLabel("Таблицы\nистинности")
         buttons[i]:setFillColor( 212/255,159/255,175/255 )
       elseif i == 4 then
-        buttons[i]:setLabel("Маски для\nвыбора файлов")
+        buttons[i]:setLabel("Анализ моделей")
         buttons[i]:setFillColor( 224/255,170/255,155/255 )
       elseif i == 5 then
         buttons[i]:setLabel("Кодирование и\nдекодирование")

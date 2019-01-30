@@ -55,13 +55,13 @@ function scene:create( event )
 	-- Code here runs when the scene is first created but has not yet appeared on screen
   local category = composer.getVariable( "stageNummer" )
   if category == 1 then
-    categoryName = "cистемы счисления"
+    categoryName = "Системы счисления"
     color = { 143/255,93/255,213/255 }
   elseif category == 2 then
-    categoryName = "Тема 2"
+    categoryName = "Маски для выбора файлов"
     color = { 157/255,106/255,189/255 }
   elseif category == 3 then
-    categoryName = "Тема 3"
+    categoryName = "Условие Фано"
     color = { 172/255,120/255,164/255 }
   elseif category == 4 then
     categoryName = "Тема 4"
@@ -192,6 +192,30 @@ function scene:create( event )
               max = tonumber( tasktable[i]["level"] )
           end
       end
+  elseif category == 3 then
+      tasktable = require("category3")
+
+      for i=1, #tasktable do
+          if tonumber( tasktable[i]["level"] ) > max then
+              max = tonumber( tasktable[i]["level"] )
+          end
+      end
+  elseif category == 4 then
+      tasktable = require("category4")
+
+      for i=1, #tasktable do
+          if tonumber( tasktable[i]["level"] ) > max then
+              max = tonumber( tasktable[i]["level"] )
+          end
+      end
+    elseif category == 5 then
+        tasktable = require("category5")
+
+        for i=1, #tasktable do
+            if tonumber( tasktable[i]["level"] ) > max then
+                max = tonumber( tasktable[i]["level"] )
+            end
+        end
   end
 
 

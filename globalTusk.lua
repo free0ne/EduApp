@@ -1,7 +1,7 @@
 local composer = require( "composer" )
 
 local scene = composer.newScene()
-local name
+local levelTask
 local category = composer.getVariable( "category" )
 local level = composer.getVariable( "level" )
 
@@ -11,12 +11,62 @@ local level = composer.getVariable( "level" )
 -- the scene is removed entirely (not recycled) via "composer.removeScene()"
 -- -----------------------------------------------------------------------------------
 
-
-
-
 -- -----------------------------------------------------------------------------------
 -- Scene event functions
 -- -----------------------------------------------------------------------------------
+local levelTasks =
+{
+	levelText1 =
+	{
+		"Сколько единиц в двоичной записи указанного числа?",
+		"Сколько значащих нулей в двоичной записи указанного числа?",
+		"Переведите числа из 10 с/с в указанную с/с.",
+		"Переведите числа из указанной с/с в десятичную с/с.",
+		"Переведите числа из указанной с/с в указанную с/с.",
+		"Сколько целых чисел между указанными числами?"
+	},
+	levelText2 =
+	{
+		"Определите, какой файл подходит под указанную маску.",
+		"Определите, какой файл НЕ подходит под указанную маску."
+	},
+	levelText3 =
+	{
+		"Для кодирования некоторой последовательности букв решили использовать неравномерный двоичный код, позволяющий однозначно декодировать двоичную последовательность, появляющуюся на приёмной стороне канала связи. Укажите кратчайшее кодовое слово для  указанной буквы, при котором код будет допускать однозначное декодирование.",
+		"Для кодирования некоторой последовательности используется неравномерный двоичный код, позволяющий однозначно декодировать полученную двоичную последовательность. Требуется сократить для одной из букв длину кодового слова так, чтобы код по-прежнему можно было декодировать однозначно. Коды остальных букв меняться не должны. Каким из указанных способов это можно сделать?"
+	},
+	levelText4 =
+	{
+		"Автомат получает на вход три цифры. Укажите, какая из следующих последовательностей символов может быть получена в результате выполения указанного алгоритма.",
+		"Автомат получает на вход три шестнадцатеричных цифры, следующих в порядке невозрастания. Укажите, какая из следующих последовательностей символов может быть получена в результате выполения указанного алгоритма."
+	}
+}
+
+
+local textLevel
+	if category == 1 and level == 1 then
+		textLevel = levelTasks.levelText1[1]
+	elseif category == 1 and level == 2 then
+		textLevel = levelTasks.levelText1[2]
+	elseif category == 1 and level == 3 then
+		textLevel = levelTasks.levelText1[3]
+	elseif category == 1 and level == 4 then
+		textLevel = levelTasks.levelText1[4]
+	elseif category == 1 and level == 5 then
+		textLevel = levelTasks.levelText1[5]
+	elseif category == 1 and level == 6 then
+		textLevel = levelTasks.levelText1[6]
+	-----------------------------------------------
+elseif category == 2 and level == 1 then
+		textLevel = levelTasks.levelText2[1]
+elseif category == 2 and level == 2 then
+		textLevel = levelTasks.levelText2[2]
+	-----------------------------------------------
+elseif category == 3 and level == 1 then
+		textLevel = levelTasks.levelText3[1]
+elseif category == 3 and level == 2 then
+		textLevel = levelTasks.levelText3[2]
+	end
 
 
 
@@ -39,115 +89,24 @@ function scene:create( event )
   display.newRoundedRect( sceneGroup, display.contentCenterX,  490,
   460, 670, 15 ):setFillColor(0.95)
 
-	local nameTable2 =
+
+
+	local options =
 	{
-		open = {"task", "task2"},
-		high = 154,
-		low = 140,
-		close = 150
+		parent=sceneGroup,
+		text = tostring (textLevel),
+		x = display.contentCenterX,
+		y = display.contentCenterY,
+		width = 420,
+		fontSize = 45,
+		font = "displayOTF",
+		align="center"
 	}
 
-	if category == 1 and level == 1 then
-
-
-		print(nameTable2.open[2])
-
-		local options =
-		{
-			parent=sceneGroup,
-			text = nameTable2.open[2]--[[В какой минимальной с/с можно записать указанное число?]],
-			x = display.contentCenterX,
-			y = display.contentCenterY,
-			width = 420,
-			fontSize = 45,
-			font = "displayOTF",
-			align="center"
-		}
 		local taskText = display.newText(options)
 		taskText:setFillColor(0.6,0.5,0.9)
 
-	elseif category == 1 and level == 2 then
-		local options =
-		{
-			parent=sceneGroup,
-			text = [[Какое число следущее в указанной с/с?]],
-			x = display.contentCenterX,
-			y = display.contentCenterY,
-			width = 420,
-			fontSize = 45,
-			font = "displayOTF",
-			align="center"
-		}
-		local taskText = display.newText(options)
-		taskText:setFillColor(0.6,0.5,0.9)
 
-	elseif category == 1 and level == 3 then
-		local options =
-		{
-			parent=sceneGroup,
-			text = [[Перевод числа из 10 с/с в указанную с/с]],
-			x = display.contentCenterX,
-			y = display.contentCenterY,
-			width = 420,
-			fontSize = 45,
-			font = "displayOTF",
-			align="center"
-		}
-		local taskText = display.newText(options)
-		taskText:setFillColor(0.6,0.5,0.9)
-
-	elseif category == 1 and level == 4 then
-		local options =
-		{
-			parent=sceneGroup,
-			text = [[Перевод числа из 10 с/с в указанную с/с]],
-			x = display.contentCenterX,
-			y = display.contentCenterY,
-			width = 420,
-			fontSize = 45,
-			font = "displayOTF",
-			align="center"
-		}
-		local taskText = display.newText(options)
-		taskText:setFillColor(0.6,0.5,0.9)
-		name = display.newText(sceneGroup, "Перевод числа\nиз указанной с/с\nв десятичную с/с", display.contentCenterX, display.contentCenterY, "displayOTF.ttf", 45)
-		name:setFillColor(1,0,0)
-		name.align = "center"
-	elseif category == 1 and level == 5 then
-		local options =
-		{
-			parent=sceneGroup,
-			text = [[Перевод числа из 10 с/с в указанную с/с]],
-			x = display.contentCenterX,
-			y = display.contentCenterY,
-			width = 420,
-			fontSize = 45,
-			font = "displayOTF",
-			align="center"
-		}
-		local taskText = display.newText(options)
-		taskText:setFillColor(0.6,0.5,0.9)
-		name = display.newText(sceneGroup, "Перевод числа\nиз указанной с/с\nв указанную с/с", display.contentCenterX, display.contentCenterY, "displayOTF.ttf", 45)
-		name:setFillColor(1,0,0)
-		name.align = "center"
-	elseif category == 1 and level == 6 then
-		local options =
-		{
-			parent=sceneGroup,
-			text = [[Перевод числа из 10 с/с в указанную с/с]],
-			x = display.contentCenterX,
-			y = display.contentCenterY,
-			width = 420,
-			fontSize = 45,
-			font = "displayOTF",
-			align="center"
-		}
-		local taskText = display.newText(options)
-		taskText:setFillColor(0.6,0.5,0.9)
-		name = display.newText(sceneGroup, "Сколько целых\nчисел между двумя\nуказанными числами?", display.contentCenterX, display.contentCenterY, "displayOTF.ttf", 45)
-		name:setFillColor(1,0,0)
-		name.align = "center"
-	end
 
 
 end

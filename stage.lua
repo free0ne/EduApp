@@ -184,6 +184,12 @@ function scene:create( event )
       tasktable = require("category1")
     elseif category == 2 then
       tasktable = require("category2")
+    elseif category == 3 then
+      tasktable = require("category3")
+    elseif category == 4 then
+      tasktable = require("category4")
+    elseif category == 5 then
+      tasktable = require("category5")
     end
 
     for i=1, #tasktable do
@@ -244,7 +250,7 @@ function scene:create( event )
         --strokeWidth = 3,
         labelColor = { default={ 173/255, 123/255, 243/255 }, over={ 173/255, 123/255, 243/255 } },
         width = 230,
-        height = 230,
+        height = 100,
         label = "answer #"..i+1,
         fontSize = 40,
         font = "displayOTF.ttf",
@@ -252,10 +258,10 @@ function scene:create( event )
         onEvent = handleButtonEvent,
       }
     )
-    xx = 145 + ((i) % 2)*250
-    yy = (i - (i%2))/2*250
+    xx = 145 + ((i) % 2)*240
+    yy = (i - (i%2))/2*110
     answerButtons[i].x = xx
-    answerButtons[i].y = 550 + yy
+    answerButtons[i].y = 750 + yy
     answerButtons[i].nummer = i+1
 
     sceneGroup:insert(answerButtons[i])
