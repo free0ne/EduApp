@@ -143,7 +143,7 @@ function scene:create( event )
   catTitle.x = 200
   catTitle.y = 70
 
-  catTitle:setFillColor(0,0,0,0.1)
+  --catTitle:setFillColor(0,0,0,0.1)
   sceneGroup:insert(catTitle)
   catTitle:addEventListener( "tap", backToMenu )
 
@@ -253,24 +253,41 @@ function scene:create( event )
     buttons[i] = widget.newButton(
       {
         shape = "Rect",
-        fillColor = { default={ 0.95, 0.96, 1 }, over={ 0.68, 0.45, 0.95 } },
+        --fillColor = { default={ 0.95, 0.96, 1 }, over={ 0.68, 0.45, 0.95 } },
         width = 235,
         height = 235,
         label = tostring( i+1 ),
         font = "displayOTF.ttf",
         fontSize = 60,
-        labelColor = { default={ 0.5, 0.1, 0.65 }, over={ 0.3, 0, 0.75 } },
+        --labelColor = { default={ 0.5, 0.1, 0.65 }, over={ 0.3, 0, 0.75 } },
 
         onEvent = handleButtonEvent
 
       }
+
     )
+
+
+
     --xx = 150 + ((i) % 3)*250
     --yy = (i - (i%3))/4
    buttons[i].x = xOffset
    buttons[i].y = yOffset
    buttons[i].nummer = i+1
 
+
+   if category == 1 then
+       catTitle:setFillColor(173/255,123/255,243/255)
+       help:setFillColor(173/255,123/255,243/255)
+       buttons[i].setLabelColor(1, 0, 0, 0.5)
+       buttons[i]:setFillColor(242/255,243/255,255/255)
+
+   elseif category == 2 then
+       catTitle:setFillColor(202/255,150/255,194/255)
+       help:setFillColor(202/255,150/255,194/255)
+       buttons[i]:setFillColor(202/255,150/255,194/255, 0.3)
+
+   end
    sceneGroup:insert(buttons[i])
 
     xOffset = xOffset + 250
@@ -280,7 +297,10 @@ function scene:create( event )
         xOffset = 150
         yOffset = yOffset + 250
       end
+
+
   end
+
 
 
   local headers = {}
