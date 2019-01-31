@@ -279,7 +279,9 @@ function scene:create( event )
    if category == 1 then
        catTitle:setFillColor(173/255,123/255,243/255)
        help:setFillColor(173/255,123/255,243/255)
-       buttons[i].setLabelColor(1, 0, 0, 0.5)
+       --buttons[i].setLabelColor(1, 0, 0, 0.5)
+       --buttons[i].labelColor = { default={ 1, 0, 0, 0.5 } }
+       buttons[i]._view._label._labelColor.default = { 1, 0, 0, 0.5 }
        buttons[i]:setFillColor(242/255,243/255,255/255)
 
    elseif category == 2 then
