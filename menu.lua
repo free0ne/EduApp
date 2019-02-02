@@ -8,8 +8,8 @@ local scene = composer.newScene()
 -- the scene is removed entirely (not recycled) via "composer.removeScene()"
 -- -----------------------------------------------------------------------------------
 
-local buttonsFont = "displayOTF.ttf"
-local buttonsFontSize = 45
+local buttonsFont = "BwModelicaBold.ttf"
+--local buttonsFontSize = 25
 
 -- ScrollView listener
 --[[local function scrollListener( event )
@@ -132,9 +132,9 @@ function scene:create( event )
       shape = "circle",
       radius = 40,
       label = "?",
-      font = "displayOTF.ttf",
-      fontSize = 45,
-      fillColor = { default={ 0, 0, 0, 0.4 }, over={ 0, 0, 0, 0.4 } },
+      font = buttonsFont,
+      fontSize = 60,
+      fillColor = { default={ 117/255, 58/255, 68/255 }, over={ 117/255, 58/255, 68/255 } },
       labelColor = { default={ 1, 1, 1 }, over={ 1, 1, 1 } },
       onPress = function(event)
         composer.showOverlay( "help" , {
@@ -157,13 +157,19 @@ function scene:create( event )
       {
         labelXOffset = 5,
         label = "categoryName",
-        labelColor = { default={ 1, 1, 1 }, over={ 1, 1, 1 } },
+        labelColor = { default={ 0.5, 0.5, 0.5 }, over={ 0, 0, 0 } },
         labelAlign = "left",
         font = buttonsFont,
-        fontSize = 45,
+        fontSize = 35,
         shape = "rect",
         width = display.contentWidth,
         height = display.contentHeight/6,
+        --height = 150,
+        cornerRadius = 8,
+            --labelYOffset = -6,
+            fillColor = { default={ 1, 1, 1 }, over={ 1, 1, 1 } },
+            strokeColor = { default={ 0, 0, 0, 0.2}, over={ 0.2, 0.2, 0.2 } },
+            strokeWidth = 1,
         --fillColor = { default={173/255,123/255,243/255,1}, over={173/255,123/255,243/255,1} },
         onEvent = handleButtonEvent
       }
@@ -174,106 +180,74 @@ function scene:create( event )
     buttons[i].nummer = i+1
 
       if i == 0 then
-        buttons[i]:setLabel("Системы\nсчисления")
-        buttons[i]:setFillColor( 173/255,123/255,243/255 )
-      elseif i == 1 then
-        buttons[i]:setLabel("Маски для\nвыбора файлов")
-        buttons[i]:setFillColor( 187/255,136/255,219/255 )
+        buttons[i]:setLabel("Системы счисления")
+        elseif i == 1 then
+        buttons[i]:setLabel("Маски для выбора файлов")
       elseif i == 2 then
         buttons[i]:setLabel("Условие Фано")
-        buttons[i]:setFillColor( 202/255,150/255,194/255 )
       elseif i == 3 then
-        buttons[i]:setLabel("Таблицы\nистинности")
-        buttons[i]:setFillColor( 212/255,159/255,175/255 )
+        buttons[i]:setLabel("Таблицы истинности")
       elseif i == 4 then
         buttons[i]:setLabel("Анализ моделей")
-        buttons[i]:setFillColor( 224/255,170/255,155/255 )
       elseif i == 5 then
         buttons[i]:setLabel("Кодирование и\nдекодирование")
-        buttons[i]:setFillColor( 237/255,182/255,133/255 )
         -----------------------------------------------------
       elseif i == 6 then
         buttons[i]:setLabel("Выполнение и анализ\nпростых алгоритмов")
-        buttons[i]:setFillColor( 249/255,198/255,133/255 )
       elseif i == 7 then
         buttons[i]:setLabel("Анализ и построение\nалгоритмов")
-        buttons[i]:setFillColor( 230/255,206/255,151/255 )
       elseif i == 8 then
         buttons[i]:setLabel("Электронные\nтаблицы")
-        buttons[i]:setFillColor( 206/255,217/255,174/255 )
       elseif i == 9 then
         buttons[i]:setLabel("Диаграммы в\nтаблицах")
-        buttons[i]:setFillColor( 186/255,227/255,194/255 )
       elseif i == 10 then
         buttons[i]:setLabel("Анализ программ\nс циклами")
-        buttons[i]:setFillColor( 163/255,237/255,216/255 )
       elseif i == 11 then
         buttons[i]:setLabel("Кодирование\nизображений")
-        buttons[i]:setFillColor( 141/255,247/255,237/255 )
         ----------------------------------------------------
       elseif i == 12 then
         buttons[i]:setLabel("Кодирование звука")
-        buttons[i]:setFillColor( 134/255,246/255,246/255 )
       elseif i == 13 then
         buttons[i]:setLabel("Скорость передачи\nданных")
-        buttons[i]:setFillColor( 142/255,222/255,247/255 )
       elseif i == 14 then
         buttons[i]:setLabel("Кодирование\nсообщений")
-        buttons[i]:setFillColor( 149/255,203/255,248/255 )
       elseif i == 15 then
         buttons[i]:setLabel("Составление слов")
-        buttons[i]:setFillColor( 156/255,183/255,249/255 )
       elseif i == 16 then
         buttons[i]:setLabel("Слова в\nалфавитном порядке")
-        buttons[i]:setFillColor( 163/255,161/255,250/255 )
       elseif i == 17 then
         buttons[i]:setLabel("Рекурсивные\nалгоритмы")
-        buttons[i]:setFillColor( 170/255,140/255,251/255 )
         -------------------------------------------------------
       elseif i == 18 then
         buttons[i]:setLabel("Адресация в сетях\nTCP/IP")
-        buttons[i]:setFillColor( 173/255,123/255,243/255 )
       elseif i == 19 then
         buttons[i]:setLabel("Вычисление количества\nинформации")
-        buttons[i]:setFillColor( 187/255,136/255,219/255 )
       elseif i == 20 then
         buttons[i]:setLabel("Анализ алгоритма\nдля Чертёжника")
-        buttons[i]:setFillColor( 202/255,150/255,194/255 )
       elseif i == 21 then
         buttons[i]:setLabel("Анализ алгоритма\nдля Редактора")
-        buttons[i]:setFillColor( 212/255,159/255,175/255 )
       elseif i == 22 then
         buttons[i]:setLabel("Поиск путей\nв графах")
-        buttons[i]:setFillColor( 224/255,170/255,155/255 )
       elseif i == 23 then
         buttons[i]:setLabel("Позиционные\nсистемы счисления")
-        buttons[i]:setFillColor( 237/255,182/255,133/255 )
         -------------------------------------------------------
       elseif i == 24 then
         buttons[i]:setLabel("Запросы в\nпоисковых системах")
-        buttons[i]:setFillColor( 249/255,198/255,133/255 )
       elseif i == 25 then
         buttons[i]:setLabel("Логические выражения\nи множества")
-        buttons[i]:setFillColor( 230/255,206/255,151/255 )
       elseif i == 26 then
         buttons[i]:setLabel("Логика и линейное\nпрограммирование")
-        buttons[i]:setFillColor( 206/255,217/255,174/255 )
       elseif i == 27 then
         buttons[i]:setLabel("Обработка массивов")
-        buttons[i]:setFillColor( 186/255,227/255,194/255 )
       elseif i == 28 then
         buttons[i]:setLabel("Циклы и\nветвления")
-        buttons[i]:setFillColor( 163/255,237/255,216/255 )
       elseif i == 29 then
         buttons[i]:setLabel("Циклы и\nподпрограммы")
-        buttons[i]:setFillColor( 141/255,247/255,237/255 )
         ------------------------------------------------------
       elseif i == 30 then
         buttons[i]:setLabel("Динамическое\nпрограммирование")
-        buttons[i]:setFillColor( 134/255,246/255,246/255 )
       elseif i == 31 then
         buttons[i]:setLabel("Системы\nлогических уравнений")
-        buttons[i]:setFillColor( 142/255,222/255,247/255 )
       end
       scrollView:insert(buttons[i])
   end

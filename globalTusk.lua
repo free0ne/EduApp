@@ -4,6 +4,8 @@ local scene = composer.newScene()
 local levelTask
 local category = composer.getVariable( "category" )
 local level = composer.getVariable( "level" )
+local boldFont = "BwModelicaBold.ttf"
+local thinFont = "BwModelicaThin.ttf"
 
 
 -- -----------------------------------------------------------------------------------
@@ -99,12 +101,12 @@ function scene:create( event )
 		y = display.contentCenterY,
 		width = 420,
 		fontSize = 45,
-		font = "displayOTF",
-		align="center"
+		font = thinFont,
+		align = "center"
 	}
 
 		local taskText = display.newText(options)
-		taskText:setFillColor(0.6,0.5,0.9)
+		taskText:setFillColor(0.5, 0.5, 0.5)
 
 
 

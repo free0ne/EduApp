@@ -6,6 +6,8 @@ local scene = composer.newScene()
 
 local category = composer.getVariable( "category" )
 local level = composer.getVariable( "level" )
+local boldFont = "BwModelicaBold.ttf"
+local thinFont = "BwModelicaThin.ttf"
 -- -----------------------------------------------------------------------------------
 -- Code outside of the scene event functions below will only be executed ONCE unless
 -- the scene is removed entirely (not recycled) via "composer.removeScene()"
@@ -96,15 +98,16 @@ local function changeTask(taskObj, buttonsArr, taskArr, taskNum)
       {
         shape = "roundedRect",
         cornerRadius = 8,
-        fillColor = { default={ 0.2, 1, 1 }, over={ 0.2, 1, 1 } },
+        fillColor = { default={ 1, 1, 1 }, over={ 1, 1, 1 } },
         --fillColor = { default={ 1, 0.2, 0.5, 0.7 }, over={ 1, 0.2, 0.5, 1 } },
         --strokeColor = { default={ 1, 1, 1 }, over={ 0.4, 0.1, 0.2 } },
         --strokeWidth = 3,
         width = 300,
         height = 260,
-        label = "К уровнямм",
+        font = boldFont,
+        label = "К уровням",
         fontSize = 32,
-        labelColor = { default={ 0.5, 0.1, 0.65 }, over={ 0, 0, 0 } },
+        labelColor = { default={ 0.5, 0.5, 0.5 }, over={ 0, 0, 0 } },
         onEvent = goBack,
       }
     )
@@ -123,10 +126,10 @@ local function handleButtonEvent( event )
       nummer = event.target.nummer
       correct = myTaskArray[currentTask]["correct"]
       if tonumber(correct) == nummer then
-        event.target:setFillColor(0.84, 1, 0.9)
+        event.target:setFillColor(67/255, 106/255, 53/255)
         score = score + 1
       else
-        event.target:setFillColor(1,0,0)
+        event.target:setFillColor(150/255, 58/255, 68/255)
       end
       print("currentTask: "..currentTask.."; Answer: "..nummer.."; Correct: "..myTaskArray[currentTask]["correct"])
       currentTask = currentTask + 1
@@ -166,8 +169,9 @@ function scene:create( event )
       height = 100,
       label = "<",
       fontSize = 60,
-      fillColor = { default={ 143/255,93/255,213/255,0.2 }, over={ 143/255,93/255,213/255, 0.4 } },
-      labelColor = { default={ 143/255,93/255,213/255 }, over={ 143/255,93/255,213/255 } },
+      font = boldFont,
+      fillColor = { default={ 1, 1, 1 }, over={ 1, 1, 1 } },
+      labelColor = {  default={ 0.5, 0.5, 0.5 }, over={ 0, 0, 0 }},
     }
   )
   catTitle.x = 50
@@ -234,8 +238,8 @@ function scene:create( event )
     Runtime:addEventListener( "system", onSystemEvent )]]--
   ------\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-  task = display.newText( sceneGroup, "taskText", display.contentWidth/2, 270, "displayOTF.ttf", 36 )
-  task:setFillColor( 0.3, 0, 0.75 )
+  task = display.newText( sceneGroup, "taskText", display.contentWidth/2, 270, thinFont, 36 )
+  task:setFillColor( 0.5, 0.5, 0.5 )
 
   answerButtons = {}
   local xx = 0
@@ -244,16 +248,16 @@ function scene:create( event )
     answerButtons[i] = widget.newButton(
       {
         shape = "Rect",
-        fillColor = { default={ 248/255, 243/255, 255/255 }, over={ 248/255, 243/255, 255/255 } },
+        fillColor = { default={ 92/255, 46/255, 80/255 }, over={ 92/255, 46/255, 80/255 } },
         --fillColor = { default={ 1, 0.2, 0.5, 0.7 }, over={ 1, 0.2, 0.5, 1 } },
         --strokeColor = { default={ 1, 1, 1 }, over={ 0.4, 0.1, 0.2 } },
         --strokeWidth = 3,
-        labelColor = { default={ 173/255, 123/255, 243/255 }, over={ 173/255, 123/255, 243/255 } },
+        labelColor = { default={ 1, 1, 1 }, over={ 1, 1, 1 } },
         width = 230,
         height = 100,
         label = "answer #"..i+1,
         fontSize = 40,
-        font = "displayOTF.ttf",
+        font = thinFont,
 
         onEvent = handleButtonEvent,
       }

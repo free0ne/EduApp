@@ -17,6 +17,8 @@ local scene = composer.newScene()
   local results = {}
   local buttons = {}
   local pos = 0
+  local boldFont = "BwModelicaBold.ttf"
+  local thinFont = "BwModelicaThin.ttf"
 
   local function backToMenu()
     composer.gotoScene( "menu" )
@@ -56,7 +58,7 @@ function scene:create( event )
   local category = composer.getVariable( "stageNummer" )
   if category == 1 then
     categoryName = "Системы счисления"
-    color = { 143/255,93/255,213/255 }
+
   elseif category == 2 then
     categoryName = "Маски для выбора файлов"
     color = { 157/255,106/255,189/255 }
@@ -117,14 +119,7 @@ function scene:create( event )
  -----------------------------------------------
   -- не забывай добавлять в группы! (sceneGroup)
   local upperRectangle = display.newRect( sceneGroup,display.contentWidth/2, 70, display.contentWidth, 140 )
-  upperRectangle:setFillColor(173/255, 123/255, 243/255)
-  --[[local paint = {
-    type = "gradient",
-    color1 = color,
-    color2 = { 1, 1, 1 },
-    direction = "down"
-  }]]--
-  --upperRectangle:setFillColor(paint)
+  upperRectangle:setFillColor( 1, 1, 1 )
 
   local catTitle = widget.newButton(
     {
@@ -132,16 +127,17 @@ function scene:create( event )
       labelAlign = "left",
       labelXOffset = 3,
       labelYOffset = -5,
-      width = display.contentWidth/4*3,
+    --  width = display.contentWidth/4*3,
+        width = display.contentWidth,
       height = 140,
       label = categoryName,
-      font = "displayOTF.ttf",
-      fontSize = 42,
-      labelColor = { default={ 1, 1, 1 }, over={ 1, 1, 1 } },
+      font = boldFont,
+      fontSize = 35,
+      labelColor = { default={ 0.5, 0.5, 0.5 }, over={ 0, 0, 0 } },
     }
   )
-  catTitle.x = 200
-  catTitle.y = 70
+  catTitle.x = 280
+  catTitle.y = 40
 
   --catTitle:setFillColor(0,0,0,0.1)
   sceneGroup:insert(catTitle)
@@ -152,9 +148,9 @@ function scene:create( event )
       shape = "circle",
       radius = 40,
       label = "?",
-      font = "displayOTF.ttf",
-      fontSize = 45,
-      fillColor = { default={ 0, 0, 0, 0.1 }, over={ 0, 0, 0, 0.1 } },
+      font = boldFont,
+      fontSize = 60,
+      fillColor = { default={ 117/255, 58/255, 68/255 }, over={ 117/255, 58/255, 68/255 } },
       labelColor = { default={ 1, 1, 1 }, over={ 1, 1, 1 } },
       onPress = function(event)
         composer.showOverlay( "help" , {
@@ -166,7 +162,8 @@ function scene:create( event )
     }
   )
   help.x = 500
-  help.y = 70
+  help.y = 40
+  help:scale(0.7, 0.7)
   sceneGroup:insert(help)
 
 ---------\\\\\\\\\\\\\\     SQL    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -257,9 +254,13 @@ function scene:create( event )
         width = 235,
         height = 235,
         label = tostring( i+1 ),
-        font = "displayOTF.ttf",
+        font = boldFont,
         fontSize = 60,
-        --labelColor = { default={ 0.5, 0.1, 0.65 }, over={ 0.3, 0, 0.75 } },
+        labelColor = { default={ 0.5, 0.5, 0.5 }, over={ 0, 0, 0 } },
+        cornerRadius = 8,
+        fillColor = { default={ 1, 1, 1 }, over={ 1, 1, 1 } },
+        strokeColor = { default={ 0, 0, 0, 0.2}, over={ 0.2, 0.2, 0.2 } },
+        strokeWidth = 1,
 
         onEvent = handleButtonEvent
 
@@ -276,20 +277,6 @@ function scene:create( event )
    buttons[i].nummer = i+1
 
 
-   if category == 1 then
-       catTitle:setFillColor(173/255,123/255,243/255)
-       help:setFillColor(173/255,123/255,243/255)
-       --buttons[i].setLabelColor(1, 0, 0, 0.5)
-       --buttons[i].labelColor = { default={ 1, 0, 0, 0.5 } }
-       buttons[i]._view._label._labelColor.default = { 1, 0, 0, 0.5 }
-       buttons[i]:setFillColor(242/255,243/255,255/255)
-
-   elseif category == 2 then
-       catTitle:setFillColor(202/255,150/255,194/255)
-       help:setFillColor(202/255,150/255,194/255)
-       buttons[i]:setFillColor(202/255,150/255,194/255, 0.3)
-
-   end
    sceneGroup:insert(buttons[i])
 
     xOffset = xOffset + 250
