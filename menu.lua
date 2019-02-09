@@ -2,91 +2,55 @@ local composer = require( "composer" )
 local widget = require( "widget" )
 
 local scene = composer.newScene()
-
+local accountButton
+local scrollView
 -- -----------------------------------------------------------------------------------
 -- Code outside of the scene event functions below will only be executed ONCE unless
 -- the scene is removed entirely (not recycled) via "composer.removeScene()"
 -- -----------------------------------------------------------------------------------
 
 local buttonsFont = "BwModelicaBold.ttf"
---local buttonsFontSize = 25
-
--- ScrollView listener
---[[local function scrollListener( event )
-
-  local phase = event.phase
-  if ( phase == "began" ) then print( "Scroll view was touched" )
-  elseif ( phase == "moved" ) then print( "Scroll view was moved" )
-  elseif ( phase == "ended" ) then print( "Scroll view was released" )
-  end
-
-  -- In the event a scroll limit is reached...
-  if ( event.limitReached ) then
-    if ( event.direction == "up" ) then print( "Reached bottom limit" )
-    elseif ( event.direction == "down" ) then print( "Reached top limit" )
-    elseif ( event.direction == "left" ) then print( "Reached right limit" )
-    elseif ( event.direction == "right" ) then print( "Reached left limit" )
-    end
-  end
-
-  return true
-end]]--
--- Function to handle button events
-
 
 -- -----------------------------------------------------------------------------------
 -- Scene event functions
 -- -----------------------------------------------------------------------------------
+local function handleButtonEvent( event )
 
+
+  local phase = event.phase
+  if ( "ended" == phase ) then
+
+      nummer = event.target.nummer
+      print( "Button #"..nummer.." was pressed and released" )
+      --!!передача данных в другую сцену
+      composer.setVariable( "stageNummer", nummer )
+      composer.gotoScene( "stageChoose" )
+  end
+
+
+  if ( phase == "moved" ) then
+      local dy = math.abs( ( event.y - event.yStart ) )
+      -- If the touch on the button has moved more than 10 pixels,
+      -- pass focus back to the scroll view so it can continue scrolling
+      if ( dy > 10 ) then
+          scrollView:takeFocus( event )
+      end
+  end
+  return true
+
+end
+
+local function goToAcc()
+  composer.gotoScene( "account" )
+end
 -- create()
 function scene:create( event )
   local sceneGroup = self.view
 ----------------------------------------------------------.......................
---тут из старой базы в тейблы дёргаю
-
-  --[[local sqlite3 = require( "sqlite3" )
-  local path = system.pathForFile( "tasks.db", system.DocumentsDirectory )
-  local db = sqlite3.open( path )
-  local filePath = system.pathForFile( "category2.txt", system.DocumentsDirectory )
-  local file = io.open( filePath, "w" )
-
-  local function onSystemEvent( event )
-      if ( event.type == "applicationExit" ) then
-          db:close()
-      end
-  end
-
-  local totstr = "{ "
-  local sql = "SELECT * FROM category2"
-  --myTaskArray = {}
-  --local taskNummer = 0
-  for row in db:nrows(sql) do
-    -- totstr = totstr.."{ id = \""..row.id.."\", "
-    totstr = totstr.."{ level = \""..row.level.."\", "
-    totstr = totstr.."tasknummer = \""..row.tasknummer.."\", "
-    totstr = totstr.."taskText = \""..row.tasktext.."\", "
-    totstr = totstr.."answer1 = \""..row.answer1.."\", "
-    totstr = totstr.."answer2 = \""..row.answer2.."\", "
-    totstr = totstr.."answer3 = \""..row.answer3.."\", "
-    totstr = totstr.."answer4 = \""..row.answer4.."\", "
-    totstr = totstr.."correct = \""..row.correct.."\" }, "
-    --myTaskArray[taskNummer]["correct"] = row.correct
-    --print(myTaskArray[taskNummer]["taskText"])
-
-  end
-  totstr = totstr.." }"
-  print(totstr)
-  if file then
-        file:write( totstr )
-        io.close( file )
-    end
-
-  -- Setup the event listener to catch "applicationExit"
-  Runtime:addEventListener( "system", onSystemEvent )]]--
 
 ----------------------------------------------------------.......................
     -- Create the widget
-  local scrollView = widget.newScrollView(
+  scrollView = widget.newScrollView(
       {
           top = 0,
           left = 0,
@@ -100,32 +64,12 @@ function scene:create( event )
       }
   )
 
-  local function handleButtonEvent( event )
 
-
-    local phase = event.phase
-    if ( "ended" == phase ) then
-
-        nummer = event.target.nummer
-        print( "Button #"..nummer.." was pressed and released" )
-        --!!передача данных в другую сцену
-        composer.setVariable( "stageNummer", nummer )
-        composer.gotoScene( "stageChoose" )
-    end
-
-
-    if ( phase == "moved" ) then
-        local dy = math.abs( ( event.y - event.yStart ) )
-        -- If the touch on the button has moved more than 10 pixels,
-        -- pass focus back to the scroll view so it can continue scrolling
-        if ( dy > 10 ) then
-            scrollView:takeFocus( event )
-        end
-    end
-    return true
-
-  end
-
+  accountButton = display.newImage("account.png", 40, 40 )
+  accountButton:setFillColor(0.3, 0.8, 0.3, 0.8)
+  accountButton:scale(0.7, 0.7)
+  accountButton:addEventListener( "tap", goToAcc )
+  scrollView:insert(accountButton)
 	-- Code here runs when the scene is first created but has not yet appeared on screen
   local help = widget.newButton(
     {

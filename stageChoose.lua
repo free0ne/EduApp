@@ -20,11 +20,17 @@ local scene = composer.newScene()
   local boldFont = "BwModelicaBold.ttf"
   local thinFont = "BwModelicaThin.ttf"
 
+  --highscores
+  local json = require( "json" )
+  local scoresTable = {}
+  local filePath = system.pathForFile( "scores.json", system.DocumentsDirectory )
+
+
   local function backToMenu()
     composer.gotoScene( "menu" )
   end
 
-  local function networkListener( event )
+  --[[local function networkListener( event )
     for i = 0, 2 do
       results[i] = "0/10"
     end
@@ -43,19 +49,66 @@ local scene = composer.newScene()
           buttons[i]:setLabel(" "..tostring(i+1).."\n"..results[i].."/9")
         end
     end
-  end
+  end]]--
 
 -- -----------------------------------------------------------------------------------
 -- Scene event functions
 -- -----------------------------------------------------------------------------------
+local function handleButtonEvent( event )
 
+  local phase = event.phase
+  if ( "ended" == phase ) then
+      nummer = event.target.nummer
+      --!!передача данных в другую сцену
+
+      composer.setVariable( "level", nummer )
+      composer.setVariable( "category", category )
+      print("Category: "..category.."; level: "..nummer)
+      composer.gotoScene( "stage" )
+  end
+  --сраное всплывающее окно, где по идее должен быть общий текст задания
+  local options =
+  {
+  isModal = true,
+  effect = "fade",
+  time = 1000,
+  }
+
+  -- By some method such as a "pause" button, show the overlay
+  composer.showOverlay( "globalTusk", options )
+
+  --[[if ( phase == "moved" ) then
+      local dy = math.abs( ( event.y - event.yStart ) )
+      -- If the touch on the button has moved more than 10 pixels,
+      -- pass focus back to the scroll view so it can continue scrolling
+      if ( dy > 10 ) then
+          scrollView:takeFocus( event )
+      end
+  end]]--
+  return true
+end
+
+local function loadScores()
+
+    local file = io.open( filePath, "r" )
+
+    if file then
+        local contents = file:read( "*a" )
+        io.close( file )
+        scoresTable = json.decode( contents )
+    end
+
+    if ( scoresTable == nil or #scoresTable == 0 ) then
+        scoresTable = { {{ 0, 0, 0, 0, 0, 0 }, {9, 9, 9, 9, 9, 9}}, {{0, 0}, {9, 9}}, }
+    end
+end
 -- create()
 function scene:create( event )
 
 	local sceneGroup = self.view
   display.setDefault( "background", 1, 1, 1 )
 	-- Code here runs when the scene is first created but has not yet appeared on screen
-  local category = composer.getVariable( "stageNummer" )
+  category = composer.getVariable( "stageNummer" )
   if category == 1 then
     categoryName = "Системы счисления"
 
@@ -83,39 +136,7 @@ function scene:create( event )
 --rectLvl:setStrokeColor (1, 0, 0)
 --rectLvl.strokeWidth = 2
 
-  local function handleButtonEvent( event )
 
-    local phase = event.phase
-    if ( "ended" == phase ) then
-        nummer = event.target.nummer
-        --!!передача данных в другую сцену
-
-        composer.setVariable( "level", nummer )
-        composer.setVariable( "category", category )
-        print("Category: "..category.."; level: "..nummer)
-        composer.gotoScene( "stage" )
-    end
-    --сраное всплывающее окно, где по идее должен быть общий текст задания
-    local options =
-    {
-    isModal = true,
-    effect = "fade",
-    time = 1000,
-    }
-
-    -- By some method such as a "pause" button, show the overlay
-    composer.showOverlay( "globalTusk", options )
-
-    --[[if ( phase == "moved" ) then
-        local dy = math.abs( ( event.y - event.yStart ) )
-        -- If the touch on the button has moved more than 10 pixels,
-        -- pass focus back to the scroll view so it can continue scrolling
-        if ( dy > 10 ) then
-            scrollView:takeFocus( event )
-        end
-    end]]--
-    return true
-  end
  -----------------------------------------------
   -- не забывай добавлять в группы! (sceneGroup)
   local upperRectangle = display.newRect( sceneGroup,display.contentWidth/2, 70, display.contentWidth, 140 )
@@ -218,27 +239,6 @@ function scene:create( event )
 
   print("Maxlevel by table is: "..max)
 
-
-  --[[
-
-  local sqlite3 = require( "sqlite3" )
-  local path = system.pathForFile( "tasks.db", system.DocumentsDirectory )
-  local db = sqlite3.open( path )
-
-  -- Handle the "applicationExit" event to close the database
-  local function onSystemEvent( event )
-      if ( event.type == "applicationExit" ) then
-          db:close()
-      end
-  end
-
-  local sql = "SELECT MAX(level) FROM category"..category
-
-  for val in db:urows(sql) do
-    max = val
-  end
-    print("Maxlevel is: "..max)
-  Runtime:addEventListener( "system", onSystemEvent )]]--
 ------\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
   local xx = 0
@@ -246,6 +246,7 @@ function scene:create( event )
   local xOffset = 150
   local yOffset = 290
   local cellCount = 1
+  loadScores()
   for i = 0, max-1 do
     buttons[i] = widget.newButton(
       {
@@ -253,7 +254,7 @@ function scene:create( event )
         --fillColor = { default={ 0.95, 0.96, 1 }, over={ 0.68, 0.45, 0.95 } },
         width = 235,
         height = 235,
-        label = tostring( i+1 ),
+        label = tostring( tostring( i+1 ).."\n"..scoresTable[category][1][i+1].." из "..scoresTable[category][2][i+1] ),
         font = boldFont,
         fontSize = 60,
         labelColor = { default={ 0.5, 0.5, 0.5 }, over={ 0, 0, 0 } },
@@ -289,22 +290,6 @@ function scene:create( event )
 
 
   end
-
-
-
-  local headers = {}
-
-  headers["Content-Type"] = "application/x-www-form-urlencoded"
-  headers["Accept-Language"] = "en-US"
-
-  --local body = "id=1&size=small"
-  local body = ""
-
-  local params = {}
-  params.headers = headers
-  params.body = body
-
-  network.request( "http://eduapp.pp/index.php", "POST", networkListener, params )
 
 
 end

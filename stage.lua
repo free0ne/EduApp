@@ -8,10 +8,43 @@ local category = composer.getVariable( "category" )
 local level = composer.getVariable( "level" )
 local boldFont = "BwModelicaBold.ttf"
 local thinFont = "BwModelicaThin.ttf"
+local btnColor = {92/255, 46/255, 80/255}
+--highscores
+local json = require( "json" )
+local scoresTable = {}
+local filePath = system.pathForFile( "scores.json", system.DocumentsDirectory )
 -- -----------------------------------------------------------------------------------
 -- Code outside of the scene event functions below will only be executed ONCE unless
 -- the scene is removed entirely (not recycled) via "composer.removeScene()"
 -- -----------------------------------------------------------------------------------
+local function loadScores()
+
+    local file = io.open( filePath, "r" )
+
+    if file then
+        local contents = file:read( "*a" )
+        io.close( file )
+        scoresTable = json.decode( contents )
+    end
+
+    if ( scoresTable == nil or #scoresTable == 0 ) then
+        scoresTable = { {{ 0, 0, 0, 0, 0, 0 }, {9, 9, 9, 9, 9, 9}}, {{0, 0}, {9, 9}}, }
+    end
+end
+
+local function saveScores(category, lvl, value)
+
+    if (scoresTable[category][1][lvl] < value) then
+      scoresTable[category][1][lvl] = value
+    end
+
+    local file = io.open( filePath, "w" )
+
+    if file then
+        file:write( json.encode( scoresTable ) )
+        io.close( file )
+    end
+end
 
 local function backToCats()
   composer.gotoScene( "stageChoose" )
@@ -31,7 +64,7 @@ local function networkListener( event )
     end
 end
 
-local function sendValues(category, level, value)
+--[[local function sendValues(category, level, value)
   local headers = {}
 
   headers["Content-Type"] = "application/x-www-form-urlencoded"
@@ -45,11 +78,11 @@ local function sendValues(category, level, value)
   params.body = body
 
   network.request( "http://eduapp.pp/add.php", "POST", networkListener, params )
-end
+end]]--
 
 local function transition_2_button(obj, text)
    obj:setLabel(text)
-   obj:setFillColor(248/255, 243/255, 255/255)
+   obj:setFillColor( unpack(btnColor) )
    obj:setEnabled(true)
    transition.to(obj,{time=200,alpha=1})
 
@@ -93,7 +126,12 @@ local function changeTask(taskObj, buttonsArr, taskArr, taskNum)
       transition.to(buttonsArr[i-1],{time=500,alpha=0.0,onComplete = function() buttonsArr[i-1]:removeSelf(); end})
     end
     taskObj.text = "Это всё, отвечено верно: "..score
-    sendValues(category, level, score)
+    --sendValues(category, level, score)
+    loadScores()
+    if (scoresTable[category][1][level] < score) then
+      print("gosave")
+      saveScores(category, level, score)
+    end
     goBack = widget.newButton(
       {
         shape = "roundedRect",
@@ -248,7 +286,7 @@ function scene:create( event )
     answerButtons[i] = widget.newButton(
       {
         shape = "Rect",
-        fillColor = { default={ 92/255, 46/255, 80/255 }, over={ 92/255, 46/255, 80/255 } },
+        fillColor = { default={ unpack(btnColor) }, over={ unpack(btnColor) } },
         --fillColor = { default={ 1, 0.2, 0.5, 0.7 }, over={ 1, 0.2, 0.5, 1 } },
         --strokeColor = { default={ 1, 1, 1 }, over={ 0.4, 0.1, 0.2 } },
         --strokeWidth = 3,
