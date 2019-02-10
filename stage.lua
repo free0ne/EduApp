@@ -192,6 +192,7 @@ end
 function scene:create( event )
 
 	sceneGroup = self.view
+    display.setStatusBar( display.HiddenStatusBar )
   display.setDefault( "background", 1, 1, 1 )
 	-- Code here runs when the scene is first created but has not yet appeared on screen
 

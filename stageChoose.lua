@@ -104,7 +104,7 @@ local function loadScores()
 end
 -- create()
 function scene:create( event )
-
+    display.setStatusBar( display.HiddenStatusBar )
 	local sceneGroup = self.view
   display.setDefault( "background", 1, 1, 1 )
 	-- Code here runs when the scene is first created but has not yet appeared on screen

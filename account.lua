@@ -19,6 +19,21 @@ local passField
 local sendRegButton
 local sendLoginButton
 local result
+local usernameFromField
+
+local userId
+local userToken
+
+local LIGroup
+local LILabel
+local LIText
+local LISync
+local LIResult
+
+local scoresFilePath = system.pathForFile( "scores.json", system.DocumentsDirectory )
+local localScores = {}
+local remoteScores = {}
+local newScores = {}
 
 local buttonsFont = "BwModelicaBold.ttf"
 
@@ -27,14 +42,68 @@ local buttonsFont = "BwModelicaBold.ttf"
 -- the scene is removed entirely (not recycled) via "composer.removeScene()"
 -- -----------------------------------------------------------------------------------
 
-
-
-
 -- -----------------------------------------------------------------------------------
 -- Scene event functions
 -- -----------------------------------------------------------------------------------
 local function backToMenu()
   composer.gotoScene( "menu" )
+end
+
+local function syncNetworkListener( event )
+    if ( event.isError ) then
+        print( "Network error: ", event.response )
+    else
+        print ( "RESPONSE: #" .. event.response.."#" )
+        response = event.response
+        response = response:gsub("%s+", "")
+        if (response == "empty") then
+            print("на сервере пусто")
+            --ТУТ ЗАПИСЬ ЛОКАЛЬНОЙ ТАБЛИЦЫ НА СЕРВАК
+        elseif response == "1" then
+
+            --ТУТ СРАВНИВАЕМ ДВЕ ТАБЛИЦЫ, ЕСЛИ ОДИНАКОВЫЕ, ТО НЕ ОТПРАВЛЯЕМ НИЧЕГО
+            --ЕСЛИ РАЗНЫЕ, ТО ДЕЛАЕМ ОДНУ ИЗ НАИБОЛЬШИХ ЗНАЧЕНИЙ И ОТПРАВЛЯЕМ
+        end
+    end
+end
+
+local function syncScores()
+    local file = io.open( scoresFilePath, "r" )
+
+    if file then
+        local contents = file:read( "*a" )
+        io.close( file )
+        localScores = json.decode( contents )
+    end
+
+    if ( localScores == nil or #localScores == 0 ) then
+        --localScores = { {{ 0, 0, 0, 0, 0, 0 }, {9, 9, 9, 9, 9, 9}}, {{0, 0}, {9, 9}}, }
+        LIResult.text = "Пока нечего сохранять"
+    else
+        local headers = {}
+        headers["Content-Type"] = "application/x-www-form-urlencoded"
+        headers["Accept-Language"] = "en-US"
+        --local body = "id=1&size=small"
+        usernameFromField = userField.text
+        local body = "id="..accountTable[1].."&username="..accountTable[2].."&token="..accountTable[3]
+        print(body)
+        local params = {}
+        params.headers = headers
+        params.body = body
+
+        network.request( "http://infogia.000webhostapp.com/syncread.php", "POST", syncNetworkListener, params )
+        print("NFS")
+    end
+    print("sync")
+end
+
+local function loggedIn()
+    isLoggedIn = true
+    regGroup.isVisible = false
+    userField.isVisible = false
+    passField.isVisible = false
+    LILabel.text = "Вы авторизованы как "..accountTable[2]
+    LIGroup.isVisible = true
 end
 
 local function loadAcc()
@@ -48,7 +117,7 @@ local function loadAcc()
     end
 
     if ( accountTable == nil or #accountTable == 0 ) then
-        accountTable = {0, 0}
+        accountTable = {0, 0, 0}
         isLoggedIn = false
 
         file = io.open( filePath, "w" )
@@ -63,9 +132,26 @@ local function loadAcc()
         print ("not logged in")
         isLoggedIn = false
     else
-        print (accountTable[1].."   "..accountTable[2])
+        loggedIn()
+        print (accountTable[1].." "..accountTable[2].." "..accountTable[3])
     end
 end
+
+local function saveAcc(id, token)
+
+    accountTable[1] = id
+    accountTable[2] = usernameFromField
+    accountTable[3] = token
+
+
+    local file = io.open( filePath, "w" )
+
+    if file then
+        file:write( json.encode( accountTable ) )
+        io.close( file )
+    end
+end
+
 
 
 local function textListener( event )
@@ -104,18 +190,16 @@ local function networkListener( event )
             result.text = "Неверный логин или пароль"
         elseif response == "5" then
             result.text = "Вы вошли в систему"
-        elseif #response == 32 then
-            result.text = response
+        elseif #response == 36 then
+            userId = tonumber( response:sub( 0, 4 ) )
+            print( userId )
+            userToken = response:sub( 5 )
+            print( userToken )
+            saveAcc(userId, userToken)
+            --result.text = "Вы вошли в систему"
+            loggedIn()
         end
     end
---for i in string.gmatch(response, "%S+") do
---     results[pos] = i
---     pos = pos + 1
---end
---pos = 0
---for i = 0, 2 do
---    buttons[i]:setLabel(" "..tostring(i+1).."\n"..results[i].."/9")
---end
 end
 
 local function handleButtonEvent( event )
@@ -142,19 +226,21 @@ local function handleButtonEvent( event )
             params.headers = headers
             params.body = body
 
-            network.request( "http://eduapp.pp/register.php", "POST", networkListener, params )
+            --network.request( "http://eduapp.pp/register.php", "POST", networkListener, params )
+            network.request( "http://infogia.000webhostapp.com/register.php", "POST", networkListener, params )
         elseif nummer == "sendLogin" then
             local headers = {}
             headers["Content-Type"] = "application/x-www-form-urlencoded"
             headers["Accept-Language"] = "en-US"
             --local body = "id=1&size=small"
-            local body = "username="..userField.text.."&password="..passField.text
+            usernameFromField = userField.text
+            local body = "username="..usernameFromField.."&password="..passField.text
 
             local params = {}
             params.headers = headers
             params.body = body
 
-            network.request( "http://eduapp.pp/login.php", "POST", networkListener, params )
+            network.request( "http://infogia.000webhostapp.com/login.php", "POST", networkListener, params )
         end
     end
     return true
@@ -166,6 +252,7 @@ function scene:create( event )
     local sceneGroup = self.view
 
     regGroup = display.newGroup()
+    LIGroup = display.newGroup()
     -- Code here runs when the scene is first created but has not yet appeared on screen
     display.setDefault( "background", 1, 1, 1 )
     local catTitle = widget.newButton(
@@ -185,8 +272,7 @@ function scene:create( event )
     catTitle:addEventListener( "tap", backToMenu )
     sceneGroup:insert(catTitle)
     sceneGroup:insert(regGroup)
-
-    loadAcc()
+    sceneGroup:insert(LIGroup)
 
     regButton = widget.newButton(
       {
@@ -313,7 +399,27 @@ function scene:create( event )
     result = display.newText( regGroup, "", display.contentCenterX, 920,
         display.contentWidth*0.7, 150, buttonsFont, 23 )
     result:setFillColor(0.5)
-    result.text = "hello"
+    --result.text = "hello"
+
+    LILabel = display.newText( LIGroup, "", display.contentCenterX, 170, buttonsFont, 24 )
+    LILabel:setFillColor(0.5)
+
+    LIText = display.newText( LIGroup, "Нажмите на кнопку,\nчтобы синхронизировать результаты\nна устройстве и сервере",
+        display.contentCenterX, 280, buttonsFont, 22 )
+    LIText:setFillColor(0.5)
+
+    LISync = display.newImage("sync.png", display.contentCenterX, 400 )
+    LISync:setFillColor(0.3, 0.8, 0.3, 0.8)
+    LISync:scale(1, 1)
+    LISync:addEventListener( "tap", syncScores )
+    LIGroup:insert(LISync)
+
+    LIResult = display.newText( LIGroup, "тут результат", display.contentCenterX, 540, buttonsFont, 24 )
+    LIResult:setFillColor(0.5)
+
+    LIGroup.isVisible = false
+
+    loadAcc()
 
 end
 
