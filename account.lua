@@ -32,8 +32,9 @@ local LIResult
 
 local scoresFilePath = system.pathForFile( "scores.json", system.DocumentsDirectory )
 local localScores = {}
+local localScoresString = "empty"
 local remoteScores = {}
-local newScores = {}
+local newScores = { {{ 0, 0, 0, 0, 0, 0 }, {9, 9, 9, 9, 9, 9}}, {{0, 0}, {9, 9}} }
 
 local buttonsFont = "BwModelicaBold.ttf"
 
@@ -52,18 +53,36 @@ end
 local function syncNetworkListener( event )
     if ( event.isError ) then
         print( "Network error: ", event.response )
+        LIResult.text = "Ошибка сети (возможно, сервер недоступен)"
     else
         print ( "RESPONSE: #" .. event.response.."#" )
         response = event.response
         response = response:gsub("%s+", "")
-        if (response == "empty") then
-            print("на сервере пусто")
-            --ТУТ ЗАПИСЬ ЛОКАЛЬНОЙ ТАБЛИЦЫ НА СЕРВАК
-        elseif response == "1" then
-
             --ТУТ СРАВНИВАЕМ ДВЕ ТАБЛИЦЫ, ЕСЛИ ОДИНАКОВЫЕ, ТО НЕ ОТПРАВЛЯЕМ НИЧЕГО
             --ЕСЛИ РАЗНЫЕ, ТО ДЕЛАЕМ ОДНУ ИЗ НАИБОЛЬШИХ ЗНАЧЕНИЙ И ОТПРАВЛЯЕМ
+        if response == "100" then
+            LIResult.text = "Первая запись внесена успешно"
+        elseif response == "101" then
+            LIResult.text = "Ошибка базы данных"
+        elseif response == "102" then
+            LIResult.text = "Ошибка, в запросе нет результатов"
+        elseif response == "103" then
+            LIResult.text = "Записи уже синхронизованы!"
+        elseif response == "104" then
+            LIResult.text = "Результаты синхронизованы успешно"
+        else
+            remoteScores = json.decode( response )
+            print("remote: "..json.encode(remoteScores))
+            --СОХРАНЕНИЕ НА МОБИЛУ
+            local file = io.open( scoresFilePath, "w" )
+
+            if file then
+                file:write( json.encode( remoteScores ) )
+                io.close( file )
+            end
+            LIResult.text = "Синхронизация прошла успешно"
         end
+
     end
 end
 
@@ -77,7 +96,7 @@ local function syncScores()
     end
 
     if ( localScores == nil or #localScores == 0 ) then
-        --localScores = { {{ 0, 0, 0, 0, 0, 0 }, {9, 9, 9, 9, 9, 9}}, {{0, 0}, {9, 9}}, }
+        --localScores = { {{ 0, 0, 0, 0, 0, 0 }, {9, 9, 9, 9, 9, 9}}, {{0, 0}, {9, 9}} }
         LIResult.text = "Пока нечего сохранять"
     else
         local headers = {}
@@ -85,7 +104,12 @@ local function syncScores()
         headers["Accept-Language"] = "en-US"
         --local body = "id=1&size=small"
         usernameFromField = userField.text
-        local body = "id="..accountTable[1].."&username="..accountTable[2].."&token="..accountTable[3]
+        if ( localScores == nil or #localScores == 0 ) then
+            localScores = { {{ 0, 0, 0, 0, 0, 0 }, {9, 9, 9, 9, 9, 9}}, {{0, 0}, {9, 9}} }
+        end
+        localScoresString = json.encode(localScores)
+
+        local body = "id="..accountTable[1].."&username="..accountTable[2].."&token="..accountTable[3].."&scores="..localScoresString
         print(body)
         local params = {}
         params.headers = headers
