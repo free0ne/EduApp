@@ -178,7 +178,7 @@ function scene:create( event )
           isModal = true,
           effect = "fade",
           time = 400,
-        } )
+      })
       end
     }
   )
